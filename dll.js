@@ -13,6 +13,7 @@ DLL has the following methods
 - peekLast() : returns last value of the list
 - iterate() : generator yielding values from head to tail
 - iterateBack() : generator yielding values from tail to head
+- find(lookFor) : checks if lookFor value is in the list
 */
 
 class DLL_Node {
@@ -141,6 +142,21 @@ class DLL {
         }
         return this.tail.value
     }
+
+    find(lookFor) {
+        if(this.isEmpty()){
+            return false
+        }
+
+        let current = this.head
+        while(current !== null){
+            if(current.value == lookFor){
+                return true
+            }
+            current = current.next
+        }
+        return false
+    }
 }
 
 function tests() {
@@ -155,6 +171,8 @@ function tests() {
     const dl = new DLL()
 
     dl.append(3)
+    assertEqual(3, dl.peekLast())
+    assertEqual(3, dl.peekFirst())
     dl.append(4)
     dl.append(5)
     dl.append(6)
@@ -166,6 +184,9 @@ function tests() {
 
     dl.prepend(2)
     dl.prepend(1)
+
+    assertEqual(true, dl.find(5))
+    assertEqual(false, dl.find(7))
 
     assertEqual(1, dl.peekFirst())
     assertEqual(6, dl.count())
@@ -186,8 +207,26 @@ function tests() {
 
     assertEqual(6, dl.pop())
     assertEqual(1, dl.popLeft())
-
     assertEqual(4, dl.count())
+    assertEqual(5, dl.peekLast())
+    assertEqual(2, dl.peekFirst())
+
+    s = ''
+    for(const val of dl.iterate()){
+        s += `${val}`
+    }
+
+    assertEqual('2345', s)
+
+    s = ''
+    for(const val of dl.iterateBack()){
+        s += `${val}`
+    }
+
+    assertEqual('5432', s)
+
+    
+    assertEqual(false, dl.find(6))
 
     dl.pop()
     dl.pop()
